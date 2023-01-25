@@ -1,0 +1,11 @@
+{
+  "serviceList": [
+    {
+      "name": "user",
+      "port": "6001",
+      "ip": "127.0.0.2",
+      "label": "pl-userservice-dev",
+      "endpoints": []
+    }
+  ]
+}
