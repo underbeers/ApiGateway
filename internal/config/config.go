@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"go.uber.org/zap"
 	"log"
+	"os"
 
 	"github.com/ilyakaznacheev/cleanenv"
 )
@@ -17,16 +18,29 @@ const (
 
 func GetConfig(isLocal bool) *models.Config {
 	logger, _ := zap.NewProduction()
-	logger.Info("Read application config")
+	//logger.Info("Read application config")
 	instance := &models.Config{IsLocal: isLocal}
 	configType := getConfigType(instance.IsLocal)
-	if err := cleanenv.ReadConfig(fmt.Sprintf("./conf/%s.json", configType), instance); err != nil {
-		help, _ := cleanenv.GetDescription(instance, nil)
-		logger.Info(help)
-		logger.Fatal(cantReadFile+"./conf/%s.json"+configType, zap.Error(err))
+	if instance.IsLocal {
+		if err := cleanenv.ReadConfig(fmt.Sprintf("./conf/%s.json", configType), instance); err != nil {
+			help, _ := cleanenv.GetDescription(instance, nil)
+			logger.Info(help)
+			logger.Fatal(cantReadFile+"./conf/%s.json"+configType, zap.Error(err))
+		}
+	} else {
+		instance.Listen.IP = getEnv("GATEWAY_IP", "")
+		instance.Listen.Port = getEnv("GATEWAY_PORT", "")
 	}
 
 	return instance
+}
+
+func getEnv(key string, defaultVal string) string {
+	if value, exists := os.LookupEnv(key); exists {
+		return value
+	}
+
+	return defaultVal
 }
 
 func getConfigType(isLocal bool) string {

@@ -1,17 +1,9 @@
 {"serviceList":[{
 	"name": "user",
 	"port": "6001",
-	"ip": "127.0.0.2",
-	"label": "pl-userservice-dev",
+	"ip": "",
+	"label": "pl_user_service",
 	"endpoints": [
-		{
-			"url": "registration/new/",
-			"protected": false,
-			"methods": [
-				"POST",
-				"OPTIONS"
-			]
-		},
 		{
 			"url": "login/",
 			"protected": false,
@@ -40,7 +32,14 @@
 			"url": "helloMessage/",
 			"protected": false,
 			"methods": [
-				"GET",
+				"GET"
+			]
+		},
+		{
+			"url": "registration/new/",
+			"protected": false,
+			"methods": [
+				"POST",
 				"OPTIONS"
 			]
 		}

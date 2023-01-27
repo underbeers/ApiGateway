@@ -83,7 +83,6 @@ func (gw *gateWay) registerNewHandlers() {
 	for _, srv := range conf.Services {
 		fn, ok := list[srv.Name]
 		if ok {
-			// srv.Label = "pl-userservice-dev"
 			regService(srv, gw, fn)
 		}
 	}
@@ -153,7 +152,7 @@ func (gw *gateWay) setCorsAccess(next http.Handler) http.Handler {
 		w.Header().Set("Access-Control-Allow-Headers", "Content-Type") //nolint:goconst
 		if r.Method == http.MethodOptions {
 			w.Header().Set("Access-Control-Allow-Headers",
-				"Content-Type, Accept, Authorization, access-control-allow-origin, access-control-allow-headers, FingerPrint, Origin, X-Requested-With") //nolint:lll
+				"Content-Type, Accept, Authorization, Access-Control-Allow-Origin, Access-Control-Allow-Headers, FingerPrint, Origin, X-Requested-With") //nolint:lll
 			w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, PATCH, DELETE")
 			r.Header.Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, PATCH, DELETE")
 		}
