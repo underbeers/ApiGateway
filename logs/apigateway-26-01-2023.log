@@ -1,0 +1,71 @@
+{"level":"info","ts":"2023-01-26T11:46:03.022+0300","caller":"api/gateway.go:58","msg":"Start to listen to","port":"6000"}
+{"level":"info","ts":"2023-01-26T11:46:14.505+0300","caller":"api/logger.go:60","msg":"started","Method":"GET","URL":"/api/v1/hello/","X-request-ID":"057400b7-f5b5-4a96-96b1-7da2f23a0525"}
+{"level":"info","ts":"2023-01-26T11:46:14.505+0300","caller":"api/logger.go:81","msg":"completed","Method":"GET","Code":200,"Status":"OK","URL":"/api/v1/hello/","X-request-ID":"057400b7-f5b5-4a96-96b1-7da2f23a0525","took":0.000009879}
+{"level":"info","ts":"2023-01-26T11:46:14.508+0300","caller":"api/logger.go:60","msg":"started","Method":"POST","URL":"/api/v1/hello/","X-request-ID":"dc57786b-70b6-4720-a46b-998cf38f1eeb"}
+{"level":"info","ts":"2023-01-26T11:46:14.510+0300","caller":"api/logger.go:81","msg":"completed","Method":"POST","Code":200,"Status":"OK","URL":"/api/v1/hello/","X-request-ID":"dc57786b-70b6-4720-a46b-998cf38f1eeb","took":0.002541512}
+{"level":"info","ts":"2023-01-26T11:50:29.677+0300","caller":"api/gateway.go:58","msg":"Start to listen to","port":"6000"}
+{"level":"info","ts":"2023-01-26T11:50:40.830+0300","caller":"api/logger.go:60","msg":"started","Method":"GET","URL":"/api/v1/hello/","X-request-ID":"aaed97f0-f34c-4515-8eb0-26c664f80466"}
+{"level":"info","ts":"2023-01-26T11:50:40.830+0300","caller":"api/logger.go:81","msg":"completed","Method":"GET","Code":200,"Status":"OK","URL":"/api/v1/hello/","X-request-ID":"aaed97f0-f34c-4515-8eb0-26c664f80466","took":0.000012474}
+{"level":"info","ts":"2023-01-26T11:50:40.832+0300","caller":"api/logger.go:60","msg":"started","Method":"POST","URL":"/api/v1/hello/","X-request-ID":"a95c2ebf-da08-46fa-bd09-f400732ee414"}
+{"level":"info","ts":"2023-01-26T11:50:40.834+0300","caller":"api/logger.go:81","msg":"completed","Method":"POST","Code":200,"Status":"OK","URL":"/api/v1/hello/","X-request-ID":"a95c2ebf-da08-46fa-bd09-f400732ee414","took":0.001824136}
+{"level":"info","ts":"2023-01-26T11:51:14.294+0300","caller":"api/logger.go:60","msg":"started","Method":"POST","URL":"/api/v1/registration/new/","X-request-ID":"a365c20d-b54b-472c-a453-c152ec8be2a9"}
+{"level":"info","ts":"2023-01-26T11:51:14.407+0300","caller":"api/logger.go:81","msg":"completed","Method":"POST","Code":201,"Status":"Created","URL":"http://127.0.0.2:6001/api/v1/registration/new/","X-request-ID":"a365c20d-b54b-472c-a453-c152ec8be2a9","took":0.112743294}
+{"level":"info","ts":"2023-01-26T11:51:32.610+0300","caller":"api/logger.go:60","msg":"started","Method":"POST","URL":"/api/v1/login/","X-request-ID":"63586396-6b07-4ab7-acc0-38a97b31d385"}
+{"level":"info","ts":"2023-01-26T11:51:32.728+0300","caller":"api/logger.go:81","msg":"completed","Method":"POST","Code":200,"Status":"OK","URL":"http://127.0.0.2:6001/api/v1/login/","X-request-ID":"63586396-6b07-4ab7-acc0-38a97b31d385","took":0.117499078}
+{"level":"info","ts":"2023-01-26T11:52:57.980+0300","caller":"api/logger.go:60","msg":"started","Method":"GET","URL":"/api/v1/user/info/","X-request-ID":"88fbbce8-76a4-42b1-806d-9d99524fe3ef"}
+{"level":"warn","ts":"2023-01-26T11:52:57.981+0300","caller":"api/logger.go:98","msg":"error while parseheader"}
+{"level":"warn","ts":"2023-01-26T11:52:57.981+0300","caller":"api/logger.go:79","msg":"completed","Method":"GET","Code":400,"Status":"Bad Request","URL":"/api/v1/user/info/","X-request-ID":"88fbbce8-76a4-42b1-806d-9d99524fe3ef","took":0.000089382}
+{"level":"info","ts":"2023-01-26T11:53:25.690+0300","caller":"api/logger.go:60","msg":"started","Method":"GET","URL":"/api/v1/user/info/","X-request-ID":"efe1a584-04cf-4b20-bd2e-d793e9dd4c1b"}
+{"level":"info","ts":"2023-01-26T11:53:25.693+0300","caller":"api/logger.go:81","msg":"completed","Method":"GET","Code":200,"Status":"OK","URL":"http://127.0.0.2:6001/api/v1/user/info/","X-request-ID":"efe1a584-04cf-4b20-bd2e-d793e9dd4c1b","took":0.002870198}
+{"level":"info","ts":"2023-01-26T12:04:43.957+0300","caller":"api/gateway.go:58","msg":"Start to listen to","port":"6000"}
+{"level":"info","ts":"2023-01-26T12:04:44.681+0300","caller":"api/logger.go:60","msg":"started","Method":"GET","URL":"/api/v1/hello/","X-request-ID":"582ea7c6-3101-41ef-91e7-9b797fbbd90d"}
+{"level":"info","ts":"2023-01-26T12:04:44.681+0300","caller":"api/logger.go:81","msg":"completed","Method":"GET","Code":200,"Status":"OK","URL":"/api/v1/hello/","X-request-ID":"582ea7c6-3101-41ef-91e7-9b797fbbd90d","took":0.000012445}
+{"level":"info","ts":"2023-01-26T12:04:44.683+0300","caller":"api/logger.go:60","msg":"started","Method":"POST","URL":"/api/v1/hello/","X-request-ID":"cec3ff76-12ee-4049-9bdb-db91c3a02193"}
+{"level":"info","ts":"2023-01-26T12:04:44.685+0300","caller":"api/logger.go:81","msg":"completed","Method":"POST","Code":200,"Status":"OK","URL":"/api/v1/hello/","X-request-ID":"cec3ff76-12ee-4049-9bdb-db91c3a02193","took":0.002412162}
+{"level":"info","ts":"2023-01-26T13:51:36.669+0300","caller":"api/gateway.go:58","msg":"Start to listen to","port":"6000"}
+{"level":"fatal","ts":"2023-01-26T13:51:36.669+0300","caller":"cmd/main.go:18","msg":"Can't start gateway api","error":"can't Start() Gateway: listen tcp :6000: bind: address already in use","stacktrace":"main.main\n\t/home/rodmul/GolandProjects/github.com/Petland/ApiGateway/cmd/main.go:18\nruntime.main\n\t/usr/lib/go-1.18/src/runtime/proc.go:250"}
+{"level":"info","ts":"2023-01-26T13:56:45.614+0300","caller":"api/gateway.go:58","msg":"Start to listen to","port":"6000"}
+{"level":"info","ts":"2023-01-26T14:01:10.681+0300","caller":"api/gateway.go:58","msg":"Start to listen to","port":"6000"}
+{"level":"fatal","ts":"2023-01-26T14:01:10.681+0300","caller":"cmd/main.go:18","msg":"Can't start gateway api","error":"can't Start() Gateway: listen tcp :6000: bind: address already in use"}
+{"level":"info","ts":"2023-01-26T14:01:25.035+0300","caller":"api/gateway.go:58","msg":"Start to listen to","port":"6000"}
+{"level":"fatal","ts":"2023-01-26T14:01:25.036+0300","caller":"cmd/main.go:18","msg":"Can't start gateway api","error":"can't Start() Gateway: listen tcp :6000: bind: address already in use"}
+{"level":"info","ts":"2023-01-26T14:05:48.343+0300","caller":"api/gateway.go:58","msg":"Start to listen to","port":"6000"}
+{"level":"fatal","ts":"2023-01-26T14:07:05.190+0300","caller":"cmd/main.go:18","msg":"Can't start gateway api","error":"can't Start() Gateway: listen tcp :6000: bind: address already in use"}
+{"level":"info","ts":"2023-01-26T14:07:33.958+0300","caller":"api/gateway.go:58","msg":"Start to listen to","port":"6000"}
+{"level":"info","ts":"2023-01-26T14:12:23.729+0300","caller":"api/gateway.go:58","msg":"Start to listen to","port":"6000"}
+{"level":"info","ts":"2023-01-26T14:19:19.377+0300","caller":"api/gateway.go:58","msg":"Start to listen to","port":""}
+{"level":"info","ts":"2023-01-26T14:20:02.744+0300","caller":"api/gateway.go:58","msg":"Start to listen to","port":""}
+{"level":"info","ts":"2023-01-26T14:27:53.790+0300","caller":"api/gateway.go:58","msg":"Start to listen to","port":"6000"}
+{"level":"info","ts":"2023-01-26T14:28:09.261+0300","caller":"api/logger.go:52","msg":"started","Method":"GET","URL":"/api/v1/hello/","X-request-ID":"1d639fbb-c93f-4349-805a-33e36f5181a6"}
+{"level":"info","ts":"2023-01-26T14:28:09.261+0300","caller":"api/logger.go:73","msg":"completed","Method":"GET","Code":200,"Status":"OK","URL":"/api/v1/hello/","X-request-ID":"1d639fbb-c93f-4349-805a-33e36f5181a6","took":0.000016509}
+{"level":"info","ts":"2023-01-26T14:28:09.263+0300","caller":"api/logger.go:52","msg":"started","Method":"POST","URL":"/api/v1/hello/","X-request-ID":"1402a9e0-6354-452f-9601-ab33ea35885d"}
+{"level":"info","ts":"2023-01-26T14:28:09.265+0300","caller":"api/logger.go:73","msg":"completed","Method":"POST","Code":200,"Status":"OK","URL":"/api/v1/hello/","X-request-ID":"1402a9e0-6354-452f-9601-ab33ea35885d","took":0.00189285}
+{"level":"info","ts":"2023-01-26T15:35:24.815+0300","caller":"api/gateway.go:58","msg":"Start to listen to","port":"6000"}
+{"level":"info","ts":"2023-01-26T15:36:14.520+0300","caller":"api/logger.go:52","msg":"started","Method":"GET","URL":"/api/v1/hello/","X-request-ID":"093ca978-8287-47d1-a766-efe2f3f4a1b8"}
+{"level":"info","ts":"2023-01-26T15:36:14.520+0300","caller":"api/logger.go:73","msg":"completed","Method":"GET","Code":200,"Status":"OK","URL":"/api/v1/hello/","X-request-ID":"093ca978-8287-47d1-a766-efe2f3f4a1b8","took":0.000012146}
+{"level":"info","ts":"2023-01-26T15:36:14.522+0300","caller":"api/logger.go:52","msg":"started","Method":"POST","URL":"/api/v1/hello/","X-request-ID":"03c45d73-26f3-4c7b-8532-b65a93794910"}
+{"level":"info","ts":"2023-01-26T15:36:14.524+0300","caller":"api/logger.go:73","msg":"completed","Method":"POST","Code":200,"Status":"OK","URL":"/api/v1/hello/","X-request-ID":"03c45d73-26f3-4c7b-8532-b65a93794910","took":0.001039011}
+{"level":"info","ts":"2023-01-26T15:47:37.570+0300","caller":"api/gateway.go:58","msg":"Start to listen to","port":"6000"}
+{"level":"info","ts":"2023-01-26T15:48:01.024+0300","caller":"api/logger.go:52","msg":"started","Method":"GET","URL":"/api/v1/hello/","X-request-ID":"2d2e6848-01d2-4445-b53d-987591613aff"}
+{"level":"info","ts":"2023-01-26T15:48:01.024+0300","caller":"api/logger.go:73","msg":"completed","Method":"GET","Code":200,"Status":"OK","URL":"/api/v1/hello/","X-request-ID":"2d2e6848-01d2-4445-b53d-987591613aff","took":0.000014938}
+{"level":"info","ts":"2023-01-26T15:48:01.026+0300","caller":"api/logger.go:52","msg":"started","Method":"POST","URL":"/api/v1/hello/","X-request-ID":"7f25d52e-6dab-49d1-aa68-de7f7c6f1ce1"}
+{"level":"info","ts":"2023-01-26T15:48:01.028+0300","caller":"api/logger.go:73","msg":"completed","Method":"POST","Code":200,"Status":"OK","URL":"/api/v1/hello/","X-request-ID":"7f25d52e-6dab-49d1-aa68-de7f7c6f1ce1","took":0.001754213}
+{"level":"info","ts":"2023-01-26T16:01:49.907+0300","caller":"api/gateway.go:58","msg":"Start to listen to","port":"6000"}
+{"level":"info","ts":"2023-01-26T16:02:02.384+0300","caller":"api/logger.go:52","msg":"started","Method":"GET","URL":"/api/v1/hello/","X-request-ID":"b66d0d92-c770-4ad0-9830-36cfbb50c769"}
+{"level":"info","ts":"2023-01-26T16:02:02.384+0300","caller":"api/logger.go:73","msg":"completed","Method":"GET","Code":200,"Status":"OK","URL":"/api/v1/hello/","X-request-ID":"b66d0d92-c770-4ad0-9830-36cfbb50c769","took":0.000025026}
+{"level":"info","ts":"2023-01-26T16:02:02.386+0300","caller":"api/logger.go:52","msg":"started","Method":"POST","URL":"/api/v1/hello/","X-request-ID":"dba790bd-dca4-4e7f-a0ee-8488b5b6b113"}
+{"level":"info","ts":"2023-01-26T16:02:02.390+0300","caller":"api/logger.go:73","msg":"completed","Method":"POST","Code":200,"Status":"OK","URL":"/api/v1/hello/","X-request-ID":"dba790bd-dca4-4e7f-a0ee-8488b5b6b113","took":0.004029317}
+{"level":"info","ts":"2023-01-26T16:07:52.753+0300","caller":"api/gateway.go:58","msg":"Start to listen to","port":"6000"}
+{"level":"info","ts":"2023-01-26T18:06:09.736+0300","caller":"api/gateway.go:58","msg":"Start to listen to","port":"6000"}
+{"level":"fatal","ts":"2023-01-26T18:06:09.736+0300","caller":"cmd/main.go:18","msg":"Can't start gateway api","error":"can't Start() Gateway: listen tcp :6000: bind: address already in use","stacktrace":"main.main\n\t/home/rodmul/GolandProjects/github.com/Petland/ApiGateway/cmd/main.go:18\nruntime.main\n\t/usr/lib/go-1.18/src/runtime/proc.go:250"}
+{"level":"info","ts":"2023-01-26T18:06:33.805+0300","caller":"api/gateway.go:58","msg":"Start to listen to","port":"6002"}
+{"level":"info","ts":"2023-01-26T18:07:56.427+0300","caller":"api/logger.go:52","msg":"started","Method":"GET","URL":"/api/v1/hello/","X-request-ID":"8303014c-038b-44f6-800e-1e861f0facb2"}
+{"level":"info","ts":"2023-01-26T18:07:56.427+0300","caller":"api/logger.go:73","msg":"completed","Method":"GET","Code":200,"Status":"OK","URL":"/api/v1/hello/","X-request-ID":"8303014c-038b-44f6-800e-1e861f0facb2","took":0.000011862}
+{"level":"info","ts":"2023-01-26T18:08:44.783+0300","caller":"api/logger.go:52","msg":"started","Method":"GET","URL":"/api/v1/hello/","X-request-ID":"894698ff-6389-4a79-a0e9-cb0844b281f6"}
+{"level":"info","ts":"2023-01-26T18:08:44.783+0300","caller":"api/logger.go:73","msg":"completed","Method":"GET","Code":200,"Status":"OK","URL":"/api/v1/hello/","X-request-ID":"894698ff-6389-4a79-a0e9-cb0844b281f6","took":0.000014668}
+{"level":"info","ts":"2023-01-26T18:08:47.084+0300","caller":"api/logger.go:52","msg":"started","Method":"POST","URL":"/api/v1/hello/","X-request-ID":"8cf8b998-6a1d-4018-8f1e-1c21a8bbe6ad"}
+{"level":"info","ts":"2023-01-26T18:08:47.087+0300","caller":"api/logger.go:73","msg":"completed","Method":"POST","Code":200,"Status":"OK","URL":"/api/v1/hello/","X-request-ID":"8cf8b998-6a1d-4018-8f1e-1c21a8bbe6ad","took":0.003013208}
+{"level":"info","ts":"2023-01-26T18:09:26.621+0300","caller":"api/logger.go:52","msg":"started","Method":"GET","URL":"/api/v1/hello/","X-request-ID":"173cbea5-cf1c-46f6-b488-a39e8c302008"}
+{"level":"info","ts":"2023-01-26T18:09:26.621+0300","caller":"api/logger.go:73","msg":"completed","Method":"GET","Code":200,"Status":"OK","URL":"/api/v1/hello/","X-request-ID":"173cbea5-cf1c-46f6-b488-a39e8c302008","took":0.000012473}
+{"level":"info","ts":"2023-01-26T18:09:29.135+0300","caller":"api/logger.go:52","msg":"started","Method":"POST","URL":"/api/v1/hello/","X-request-ID":"d19b015c-852e-4bde-aecf-8f5be9a24092"}
+{"level":"info","ts":"2023-01-26T18:09:29.137+0300","caller":"api/logger.go:73","msg":"completed","Method":"POST","Code":200,"Status":"OK","URL":"/api/v1/hello/","X-request-ID":"d19b015c-852e-4bde-aecf-8f5be9a24092","took":0.002298441}
