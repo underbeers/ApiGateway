@@ -36,20 +36,12 @@ func NewLogger(isLocal bool) *zap.Logger {
 	}
 	writer := zapcore.AddSync(logFile)
 	defaultLogLevel := zapcore.DebugLevel
-	if isLocal {
-		consoleEncoder := zapcore.NewConsoleEncoder(loggerConfig)
-		core := zapcore.NewTee(
-			zapcore.NewCore(fileEncoder, writer, defaultLogLevel),
-			zapcore.NewCore(consoleEncoder, zapcore.AddSync(os.Stdout), defaultLogLevel),
-		)
-		logger := zap.New(core, zap.AddCaller(), zap.AddStacktrace(zapcore.ErrorLevel))
-
-		return logger
-	}
+	consoleEncoder := zapcore.NewConsoleEncoder(loggerConfig)
 	core := zapcore.NewTee(
 		zapcore.NewCore(fileEncoder, writer, defaultLogLevel),
+		zapcore.NewCore(consoleEncoder, zapcore.AddSync(os.Stdout), defaultLogLevel),
 	)
-	logger := zap.New(core, zap.AddCaller())
+	logger := zap.New(core, zap.AddCaller(), zap.AddStacktrace(zapcore.ErrorLevel))
 
 	return logger
 }

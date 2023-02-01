@@ -10,6 +10,7 @@ import (
 func main() {
 	isLocalFlag := flag.Bool("use_local_config", false, "use for starting locally in debug mode")
 	flag.Parse()
+
 	cfg := config.GetConfig(*isLocalFlag)
 	gateWay := api.NewGateWay(cfg)
 	err := gateWay.Start()
