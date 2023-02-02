@@ -1,0 +1,95 @@
+name: CI/CD-ApiGateway
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+      - PL-79
+
+jobs:
+  sending_message:
+    name: Sending message
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Get branch name
+        id: branch-name
+        uses: tj-actions/branch-names@v5.2
+
+      - name: Sending telegram message
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_CHAT_ID}}
+          token: ${{ secrets.TELEGRAM_BOT_TOKEN}}
+          message: |
+            New commit from ${{ github.actor }} on branch ${{ steps.branch-name.outputs.current_branch }}.  
+              
+            Commit message: ${{ github.event.commits[0].message }}  
+              
+            See changes: https://github.com/${{ github.repository }}/commit/${{github.sha}}
+            
+  build:
+    name: Build and push
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_ACCESS_TOKEN }}
+
+      - name: Set up Docker Build
+        uses: docker/setup-buildx-action@v2
+
+      - name: Build and push
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/pl_api_gateway:v1
+
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-20.04
+    needs: [build]
+    steps:
+      - name: Update image on server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            cd ./petland
+            docker-compose pull
+            docker-compose up -d
+
+      - name: Send status
+        if: ${{ always() }}
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_CHAT_ID }}
+          token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          message: |
+            ${{ github.workflow }}: Deploy updated image ${{ job.status }}
+        env:
+          status: ${{job.status}}
+
+  send_result:
+    if: ${{ always() }}
+    name: Send result
+    needs: [ deploy ]
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Sending telegram message
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_CHAT_ID}}
+          token: ${{ secrets.TELEGRAM_BOT_TOKEN}}
+          message: |
+            ${{ github.workflow }} ended
