@@ -10,7 +10,7 @@ COPY . ./
 
 RUN go build -o ./api_gateway ./cmd/main.go
 
-EXPOSE 6000
+EXPOSE 6002
 
 ENV GATEWAY_IP=$GATEWAY_IP
 ENV GATEWAY_PORT=$GATEWAY_PORT
