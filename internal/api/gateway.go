@@ -77,9 +77,9 @@ func (gw *gateWay) registerHandlers() {
 func (gw *gateWay) registerNewHandlers() {
 	list := make(map[string]func(string, string) http.HandlerFunc)
 	list["user"] = gw.handleRedirectUserService
-	list["pet"] = gw.handleDefault
+	list["pet"] = gw.handleRedirectService
 
-	conf := ReadConfig(gw)
+	conf := ReadConfig()
 	for _, srv := range conf.Services {
 		fn, ok := list[srv.Name]
 		if ok {
@@ -88,14 +88,10 @@ func (gw *gateWay) registerNewHandlers() {
 	}
 }
 
-func ReadConfig(gw *gateWay) *models.Config {
+func ReadConfig() *models.Config {
 	instance := &models.Config{}
 	var configType string
-	if gw.IsLocalRunning() {
-		configType = "local"
-	} else {
-		configType = "config"
-	}
+	configType = "config"
 
 	err := cleanenv.ReadConfig(fmt.Sprintf("./conf/%s.json", configType), instance)
 	if err != nil {
@@ -175,6 +171,18 @@ func (gw *gateWay) handleRedirectUserService(ip string, port string) http.Handle
 		redirectURL, err := buildURLHandler(ip, port)
 		if err != nil {
 			gw.Logger.Error("error handleRedirectUserService url parse", zap.Error(err))
+		}
+		proxy := httputil.NewSingleHostReverseProxy(redirectURL)
+		r.Header.Set(RedirectURLHeader, redirectURL.String())
+		proxy.ServeHTTP(w, r)
+	}
+}
+
+func (gw *gateWay) handleRedirectService(ip string, port string) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		redirectURL, err := buildURLHandler(ip, port)
+		if err != nil {
+			gw.Logger.Error("error handleRedirectService url parse", zap.Error(err))
 		}
 		proxy := httputil.NewSingleHostReverseProxy(redirectURL)
 		r.Header.Set(RedirectURLHeader, redirectURL.String())

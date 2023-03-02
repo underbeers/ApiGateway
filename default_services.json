@@ -6,6 +6,13 @@
       "ip": "127.0.0.1",
       "label": "pl_user_service",
       "endpoints": []
+    },
+    {
+      "name": "pet",
+      "port": "6003",
+      "ip": "127.0.0.1",
+      "label": "pl_pet_service",
+      "endpoints": []
     }
   ]
 }

@@ -18,9 +18,8 @@ const (
 
 func GetConfig(isLocal bool) *models.Config {
 	logger, _ := zap.NewProduction()
-	//logger.Info("Read application config")
 	instance := &models.Config{IsLocal: isLocal}
-	configType := getConfigType(instance.IsLocal)
+	configType := "config"
 	if instance.IsLocal {
 		if err := cleanenv.ReadConfig(fmt.Sprintf("./conf/%s.json", configType), instance); err != nil {
 			help, _ := cleanenv.GetDescription(instance, nil)
@@ -41,14 +40,6 @@ func getEnv(key string, defaultVal string) string {
 	}
 
 	return defaultVal
-}
-
-func getConfigType(isLocal bool) string {
-	if isLocal {
-		return "local"
-	}
-
-	return "config"
 }
 
 func ReadServicesList() *models.ServiceList {
