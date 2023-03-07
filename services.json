@@ -1,1 +1,150 @@
-{"serviceList":[]}
+{"serviceList":[{
+	"name": "user",
+	"port": "6001",
+	"ip": "127.0.0.1",
+	"label": "pl_user_service",
+	"endpoints": [
+		{
+			"url": "email/code/",
+			"protected": false,
+			"methods": [
+				"POST",
+				"OPTIONS"
+			]
+		},
+		{
+			"url": "password/reset/",
+			"protected": false,
+			"methods": [
+				"PATCH",
+				"OPTIONS"
+			]
+		},
+		{
+			"url": "helloMessage/",
+			"protected": false,
+			"methods": [
+				"GET"
+			]
+		},
+		{
+			"url": "login/",
+			"protected": false,
+			"methods": [
+				"POST",
+				"OPTIONS"
+			]
+		},
+		{
+			"url": "login/token/",
+			"protected": true,
+			"methods": [
+				"GET",
+				"OPTIONS"
+			]
+		},
+		{
+			"url": "user/password/change/",
+			"protected": true,
+			"methods": [
+				"PATCH",
+				"OPTIONS"
+			]
+		},
+		{
+			"url": "password/refresh/",
+			"protected": false,
+			"methods": [
+				"POST",
+				"OPTIONS"
+			]
+		},
+		{
+			"url": "registration/new/",
+			"protected": false,
+			"methods": [
+				"POST",
+				"OPTIONS"
+			]
+		},
+		{
+			"url": "user/info/",
+			"protected": true,
+			"methods": [
+				"GET",
+				"OPTIONS"
+			]
+		},
+		{
+			"url": "user/delete/",
+			"protected": true,
+			"methods": [
+				"DELETE",
+				"OPTIONS"
+			]
+		}
+	]
+},{
+	"name": "pet",
+	"port": "6003",
+	"ip": "127.0.0.1",
+	"label": "pl_pet_service",
+	"endpoints": [
+		{
+			"url": "petCards/new",
+			"protected": true,
+			"methods": [
+				"OPTIONS",
+				"POST"
+			]
+		},
+		{
+			"url": "petCards/update/:id",
+			"protected": true,
+			"methods": [
+				"OPTIONS",
+				"PUT"
+			]
+		},
+		{
+			"url": "petCards/delete/:id",
+			"protected": true,
+			"methods": [
+				"OPTIONS",
+				"DELETE"
+			]
+		},
+		{
+			"url": "petCards",
+			"protected": false,
+			"methods": [
+				"GET",
+				"OPTIONS"
+			]
+		},
+		{
+			"url": "petCards/main",
+			"protected": false,
+			"methods": [
+				"GET",
+				"OPTIONS"
+			]
+		},
+		{
+			"url": "petTypes",
+			"protected": false,
+			"methods": [
+				"GET",
+				"OPTIONS"
+			]
+		},
+		{
+			"url": "breeds",
+			"protected": false,
+			"methods": [
+				"GET",
+				"OPTIONS"
+			]
+		}
+	]
+}]}
