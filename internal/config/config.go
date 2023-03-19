@@ -3,7 +3,6 @@ package config
 import (
 	"ApiGateway/internal/models"
 	"fmt"
-	"go.uber.org/zap"
 	"log"
 	"os"
 
@@ -17,19 +16,9 @@ const (
 )
 
 func GetConfig(isLocal bool) *models.Config {
-	logger, _ := zap.NewProduction()
 	instance := &models.Config{IsLocal: isLocal}
-	configType := "config"
-	if instance.IsLocal {
-		if err := cleanenv.ReadConfig(fmt.Sprintf("./conf/%s.json", configType), instance); err != nil {
-			help, _ := cleanenv.GetDescription(instance, nil)
-			logger.Info(help)
-			logger.Fatal(cantReadFile+"./conf/%s.json"+configType, zap.Error(err))
-		}
-	} else {
-		instance.Listen.IP = getEnv("GATEWAY_IP", "")
-		instance.Listen.Port = getEnv("GATEWAY_PORT", "")
-	}
+	instance.Listen.IP = getEnv("GATEWAY_IP", "")
+	instance.Listen.Port = getEnv("GATEWAY_PORT", "")
 
 	return instance
 }

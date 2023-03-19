@@ -4,14 +4,14 @@
       "name": "user",
       "port": "6001",
       "ip": "127.0.0.1",
-      "label": "pl_user_service",
+      "label": "pl-user-service",
       "endpoints": []
     },
     {
       "name": "pet",
       "port": "6003",
       "ip": "127.0.0.1",
-      "label": "pl_pet_service",
+      "label": "pl-pet-service",
       "endpoints": []
     }
   ]

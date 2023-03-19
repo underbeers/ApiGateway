@@ -27,7 +27,7 @@ const (
 	requestID           = "X-request-ID"
 	RedirectURLHeader   = "RedirectURL"
 	infoEnd             = "endpoint-info/"
-	defaultServicesCnt  = 5 // How many microservice's we have when starting ApiGateway
+	defaultServicesCnt  = 3 // How many microservice's we have when starting ApiGateway
 	authorizationHeader = "authorization"
 	POST                = "POST"
 	GET                 = "GET"
@@ -238,18 +238,13 @@ func (gw *gateWay) handleHello() http.HandlerFunc {
 
 const servicesCount = 5
 
-func getServices(gw *gateWay) ([]string, error) {
+func getServices() ([]string, error) {
 	// GO to endpoint-info/ receive json, update our
 	services := config.ReadServicesList()
 	var domain string
-	isLocal := gw.IsLocalRunning()
 	serversList := make([]string, 0, servicesCount)
 	for _, serv := range services.ServiceList {
-		if isLocal {
-			domain = serv.IP
-		} else {
-			domain = serv.Label
-		}
+		domain = serv.IP
 		serviceURL, err := url.Parse(
 			protocol + "://" + domain + ":" + serv.Port + baseURL + infoEnd)
 		if err != nil {
@@ -304,7 +299,7 @@ func (gw *gateWay) UpdateServicesInfo(list []string) error { //nolint: cyclop
 		// if we passed updated list use it (len>0), if not parse config file
 		servicesList = list
 	} else {
-		servicesList, err = getServices(gw)
+		servicesList, err = getServices()
 		if err != nil {
 			return errorsCore.WrapError("error while UpdateServicesInfo()", err)
 		}
@@ -362,13 +357,7 @@ func regService(srv models.Service, gw *gateWay, fn func(string, string) http.Ha
 		AllowedHeaders:   []string{"*"},
 	})
 	var domain string
-	isLocal := gw.IsLocalRunning()
-
-	if isLocal {
-		domain = srv.IP
-	} else {
-		domain = srv.Label
-	}
+	domain = srv.IP
 	for _, endpoint := range srv.Endpoints {
 		if endpoint.Protected {
 			gw.routerProtected.Path(baseURL +
@@ -383,15 +372,9 @@ func regService(srv models.Service, gw *gateWay, fn func(string, string) http.Ha
 func CheckService(gw *gateWay, serv models.Service) error {
 	var domain string
 	servicesNames := make([]string, 0, defaultServicesCnt)
+	domain = serv.IP
 
-	isLocal := gw.IsLocalRunning()
-	if isLocal {
-		domain = serv.IP
-	} else {
-		domain = serv.Label
-	}
-
-	servicesList, err := getServices(gw)
+	servicesList, err := getServices()
 	if err != nil {
 		return errorsCore.WrapError("error while CheckService()", err)
 	}
