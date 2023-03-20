@@ -50,24 +50,24 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/pl_api_gateway:v1
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/pl_api_gateway:v2
 
   deploy:
     name: Deploy
     runs-on: ubuntu-20.04
     needs: [build]
     steps:
-      - name: Update image on server
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USERNAME }}
-          key: ${{ secrets.SSH_KEY }}
-          port: ${{ secrets.SSH_PORT }}
-          script: |
-            cd ./petland
-            docker-compose pull
-            docker-compose up -d
+      #- name: Update image on server
+      #  uses: appleboy/ssh-action@master
+      #  with:
+      #    host: ${{ secrets.SSH_HOST }}
+      #    username: ${{ secrets.SSH_USERNAME }}
+      #    key: ${{ secrets.SSH_KEY }}
+      #    port: ${{ secrets.SSH_PORT }}
+      #    script: |
+      #      cd ./petland
+      #      docker-compose pull
+      #      docker-compose up -d
 
       - name: Send status
         if: ${{ always() }}
@@ -76,7 +76,7 @@ jobs:
           to: ${{ secrets.TELEGRAM_CHAT_ID }}
           token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           message: |
-            ${{ github.workflow }}: Deploy updated image ${{ job.status }}
+            ${{ github.workflow }}: Deploy updated image ${{ job.status }} (fake, not deployed)
         env:
           status: ${{job.status}}
 
