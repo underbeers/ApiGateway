@@ -1,86 +1,18 @@
 {"serviceList":[{
-	"name": "pet",
-	"port": "6003",
-	"ip": "127.0.0.1",
-	"label": "pl_pet_service",
-	"endpoints": [
-		{
-			"url": "petCards/main",
-			"protected": false,
-			"methods": [
-				"GET",
-				"OPTIONS"
-			]
-		},
-		{
-			"url": "petCards/new/",
-			"protected": true,
-			"methods": [
-				"OPTIONS"
-			]
-		},
-		{
-			"url": "petCards/update/:id",
-			"protected": true,
-			"methods": [
-				"OPTIONS",
-				"PUT"
-			]
-		},
-		{
-			"url": "petCards/new",
-			"protected": true,
-			"methods": [
-				"POST"
-			]
-		},
-		{
-			"url": "petCards",
-			"protected": false,
-			"methods": [
-				"GET",
-				"OPTIONS"
-			]
-		},
-		{
-			"url": "petTypes",
-			"protected": false,
-			"methods": [
-				"GET",
-				"OPTIONS"
-			]
-		},
-		{
-			"url": "breeds",
-			"protected": false,
-			"methods": [
-				"GET",
-				"OPTIONS"
-			]
-		},
-		{
-			"url": "petCards/delete/:id/",
-			"protected": true,
-			"methods": [
-				"OPTIONS"
-			]
-		},
-		{
-			"url": "petCards/delete/:id",
-			"protected": true,
-			"methods": [
-				"DELETE"
-			]
-		}
-	]
-},{
 	"name": "user",
 	"port": "6001",
-	"ip": "127.0.0.1",
-	"label": "pl_user_service",
+	"ip": "localhost",
 	"endpoints": [
 		{
-			"url": "registration/new",
+			"url": "password/reset",
+			"protected": false,
+			"methods": [
+				"PATCH",
+				"OPTIONS"
+			]
+		},
+		{
+			"url": "login",
 			"protected": false,
 			"methods": [
 				"POST",
@@ -88,7 +20,15 @@
 			]
 		},
 		{
-			"url": "password/refresh",
+			"url": "user/delete",
+			"protected": true,
+			"methods": [
+				"DELETE",
+				"OPTIONS"
+			]
+		},
+		{
+			"url": "email/code",
 			"protected": false,
 			"methods": [
 				"POST",
@@ -104,7 +44,7 @@
 			]
 		},
 		{
-			"url": "email/code",
+			"url": "password/refresh",
 			"protected": false,
 			"methods": [
 				"POST",
@@ -119,7 +59,7 @@
 			]
 		},
 		{
-			"url": "login",
+			"url": "registration/new",
 			"protected": false,
 			"methods": [
 				"POST",
@@ -139,22 +79,6 @@
 			"protected": true,
 			"methods": [
 				"GET",
-				"OPTIONS"
-			]
-		},
-		{
-			"url": "user/delete",
-			"protected": true,
-			"methods": [
-				"DELETE",
-				"OPTIONS"
-			]
-		},
-		{
-			"url": "password/reset",
-			"protected": false,
-			"methods": [
-				"PATCH",
 				"OPTIONS"
 			]
 		}

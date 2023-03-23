@@ -3,10 +3,8 @@ package api
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
-	"log"
 	"net/http"
 	"os"
 	"time"
@@ -27,18 +25,9 @@ const logPermissions = 0o640
 func NewLogger(isLocal bool) *zap.Logger {
 	loggerConfig := zap.NewProductionEncoderConfig()
 	loggerConfig.EncodeTime = zapcore.ISO8601TimeEncoder
-	fileEncoder := zapcore.NewJSONEncoder(loggerConfig)
-	timeStamp := time.Now().Format("02-01-2006")
-	logFile, err := os.OpenFile(fmt.Sprintf("./logs/apigateway-%s.log", timeStamp),
-		os.O_APPEND|os.O_CREATE|os.O_WRONLY, logPermissions)
-	if err != nil {
-		log.Printf("Error while creating NewLogger %s", err.Error())
-	}
-	writer := zapcore.AddSync(logFile)
 	defaultLogLevel := zapcore.DebugLevel
 	consoleEncoder := zapcore.NewConsoleEncoder(loggerConfig)
 	core := zapcore.NewTee(
-		zapcore.NewCore(fileEncoder, writer, defaultLogLevel),
 		zapcore.NewCore(consoleEncoder, zapcore.AddSync(os.Stdout), defaultLogLevel),
 	)
 	logger := zap.New(core, zap.AddCaller(), zap.AddStacktrace(zapcore.ErrorLevel))
