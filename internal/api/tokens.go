@@ -12,7 +12,6 @@ import (
 
 var (
 	ErrNoToken = errors.New("no token provided in Authorization header")
-	IsLocal    bool
 )
 
 const (
@@ -20,11 +19,8 @@ const (
 	headerSegments = 2
 )
 
-func (gw *gateWay) verifyToken(next http.Handler) http.Handler {
+func (gw *GateWay) verifyToken(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if gw.conf.IsLocal {
-			IsLocal = true
-		}
 		if r.Method == http.MethodOptions {
 			return
 		}

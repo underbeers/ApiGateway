@@ -9,11 +9,9 @@ import (
 	"fmt"
 	"github.com/google/uuid"
 	"github.com/gorilla/mux"
-	"github.com/ilyakaznacheev/cleanenv"
 	"github.com/rs/cors"
 	"go.uber.org/zap"
 	"io"
-	"log"
 	"net/http"
 	"net/http/httputil"
 	"net/url"
@@ -36,25 +34,24 @@ const (
 	userID              = "UserID"
 )
 
-type gateWay struct {
+type GateWay struct {
 	Logger          *zap.Logger
 	conf            *models.Config
 	router          *mux.Router
 	routerProtected *mux.Router
 }
 
-func NewGateWay(cfg *models.Config) *gateWay {
-	gw := &gateWay{conf: cfg, router: mux.NewRouter()}
-	gw.Logger = NewLogger(cfg.IsLocal)
+func NewGateWay(cfg *models.Config) *GateWay {
+	gw := &GateWay{conf: cfg, router: mux.NewRouter()}
+	gw.conf.Services = config.ReadServicesList().ServiceList
+	gw.Logger = NewLogger()
 	gw.registerHandlers()
 
 	return gw
 }
 
-func (gw *gateWay) Start() error {
-	if err := gw.UpdateServicesInfo([]string{}); err != nil {
-		gw.Logger.Error("can't UpdateServicesInfo " + err.Error())
-	}
+func (gw *GateWay) Start() error {
+	gw.registerNewHandlers()
 	gw.Logger.Info("Start to listen to", zap.String("port", gw.conf.Listen.Port))
 	err := http.ListenAndServe(":"+gw.conf.Listen.Port, gw.router) //nolint:gosec, gofmt, nolintlint
 	if err != nil {
@@ -64,23 +61,21 @@ func (gw *gateWay) Start() error {
 	return nil
 }
 
-func (gw *gateWay) registerHandlers() {
+func (gw *GateWay) registerHandlers() {
 	gw.router.Use(gw.setRequestID)
 	gw.router.Use(gw.setCorsAccess)
 	gw.router.Use(gw.logRequest)
 	gw.routerProtected = gw.router.NewRoute().Subrouter()
 	gw.routerProtected.Use(gw.setRequestID, gw.verifyToken, gw.setCorsAccess, gw.addUserIDHeader)
-	gw.router.Path(baseURL+"hello/").Handler(gw.handleHello()).Methods(POST, GET)
-	gw.registerNewHandlers()
+	gw.router.Path(baseURL+"hello").Handler(gw.handleHello()).Methods(POST, GET)
 }
 
-func (gw *gateWay) registerNewHandlers() {
+func (gw *GateWay) registerNewHandlers() {
 	list := make(map[string]func(string, string) http.HandlerFunc)
 	list["user"] = gw.handleRedirectUserService
 	list["pet"] = gw.handleRedirectService
 
-	conf := ReadConfig()
-	for _, srv := range conf.Services {
+	for _, srv := range gw.conf.Services {
 		fn, ok := list[srv.Name]
 		if ok {
 			regService(srv, gw, fn)
@@ -88,27 +83,7 @@ func (gw *gateWay) registerNewHandlers() {
 	}
 }
 
-func ReadConfig() *models.Config {
-	instance := &models.Config{}
-	var configType string
-	configType = "config"
-
-	err := cleanenv.ReadConfig(fmt.Sprintf("./conf/%s.json", configType), instance)
-	if err != nil {
-		log.Fatalf("can't read config. %s", err.Error())
-	}
-	srvList := config.ReadServicesList()
-
-	instance.Services = append(instance.Services, srvList.ServiceList...)
-
-	return instance
-}
-
-func (gw *gateWay) IsLocalRunning() bool {
-	return gw.conf.IsLocal
-}
-
-func (gw *gateWay) setRequestID(next http.Handler) http.Handler {
+func (gw *GateWay) setRequestID(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Header.Get(requestID) == "" {
 			id := uuid.New().String()
@@ -118,7 +93,7 @@ func (gw *gateWay) setRequestID(next http.Handler) http.Handler {
 	})
 }
 
-func (gw *gateWay) addUserIDHeader(next http.Handler) http.Handler {
+func (gw *GateWay) addUserIDHeader(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if len(r.Header.Get("ExpiredIn")) > 0 {
 			next.ServeHTTP(w, r)
@@ -139,7 +114,7 @@ func (gw *gateWay) addUserIDHeader(next http.Handler) http.Handler {
 	})
 }
 
-func (gw *gateWay) setCorsAccess(next http.Handler) http.Handler {
+func (gw *GateWay) setCorsAccess(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		w.Header().Set("Access-Control-Allow-Origin", "*")
@@ -166,7 +141,7 @@ func buildURLHandler(ip string, port string) (*url.URL, error) {
 	return redirectURL, nil
 }
 
-func (gw *gateWay) handleRedirectUserService(ip string, port string) http.HandlerFunc {
+func (gw *GateWay) handleRedirectUserService(ip string, port string) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		redirectURL, err := buildURLHandler(ip, port)
 		if err != nil {
@@ -178,7 +153,7 @@ func (gw *gateWay) handleRedirectUserService(ip string, port string) http.Handle
 	}
 }
 
-func (gw *gateWay) handleRedirectService(ip string, port string) http.HandlerFunc {
+func (gw *GateWay) handleRedirectService(ip string, port string) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		redirectURL, err := buildURLHandler(ip, port)
 		if err != nil {
@@ -190,7 +165,7 @@ func (gw *gateWay) handleRedirectService(ip string, port string) http.HandlerFun
 	}
 }
 
-func (gw *gateWay) handleDefault(ip string, port string) http.HandlerFunc {
+func (gw *GateWay) handleDefault(ip string, port string) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		redirectURL, err := buildURLHandler(ip, port)
 		if err != nil {
@@ -207,11 +182,21 @@ func (gw *gateWay) handleDefault(ip string, port string) http.HandlerFunc {
 	}
 }
 
-func (gw *gateWay) handleHello() http.HandlerFunc {
+func (gw *GateWay) handleHello() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if r.Method == http.MethodGet {
 			if _, err := w.Write([]byte("HELLO FROM APIGateway, GET method")); err != nil {
 				gw.Logger.Warn(err.Error())
+			}
+			name := r.URL.Query().Get("service")
+			ip := strings.Split(r.RemoteAddr, ":")[0]
+			port := r.URL.Query().Get("port")
+
+			for k, v := range gw.conf.Services {
+				if v.Name == name {
+					gw.conf.Services[k].IP = ip
+					gw.conf.Services[k].Port = port
+				}
 			}
 
 			return
@@ -233,20 +218,19 @@ func (gw *gateWay) handleHello() http.HandlerFunc {
 		if err := CheckService(gw, instance); err != nil {
 			gw.Logger.Warn(err.Error())
 		}
+
+		gw.registerNewHandlers()
 	}
 }
 
 const servicesCount = 5
 
-func getServices() ([]string, error) {
+func (gw *GateWay) getServices() ([]string, error) {
 	// GO to endpoint-info/ receive json, update our
-	services := config.ReadServicesList()
-	var domain string
 	serversList := make([]string, 0, servicesCount)
-	for _, serv := range services.ServiceList {
-		domain = serv.IP
+	for _, serv := range gw.conf.Services {
 		serviceURL, err := url.Parse(
-			protocol + "://" + domain + ":" + serv.Port + baseURL + infoEnd)
+			protocol + "://" + serv.IP + ":" + serv.Port + baseURL + infoEnd)
 		if err != nil {
 			return nil, errorsCore.WrapError("getServices() can't parse service url"+serviceURL.String(), err)
 		}
@@ -287,7 +271,7 @@ func getServicesInfo(serversList []string) (map[string]models.Service, error) {
 	return parsedServices, nil
 }
 
-func (gw *gateWay) UpdateServicesInfo(list []string) error { //nolint: cyclop
+func (gw *GateWay) UpdateServicesInfo(list []string) error { //nolint: cyclop
 	// TODO:Set version of endpoints info, and check it here
 	// if version same, don't update list
 
@@ -299,7 +283,7 @@ func (gw *gateWay) UpdateServicesInfo(list []string) error { //nolint: cyclop
 		// if we passed updated list use it (len>0), if not parse config file
 		servicesList = list
 	} else {
-		servicesList, err = getServices()
+		servicesList, err = gw.getServices()
 		if err != nil {
 			return errorsCore.WrapError("error while UpdateServicesInfo()", err)
 		}
@@ -324,6 +308,7 @@ func (gw *gateWay) UpdateServicesInfo(list []string) error { //nolint: cyclop
 	objCnt := len(servicesInfo) - 1
 	var i int
 	for _, serv := range servicesInfo {
+		gw.conf.Services = append(gw.conf.Services, serv)
 		var buf bytes.Buffer
 		payload, err := json.MarshalIndent(serv, "", "\t")
 		if err != nil {
@@ -345,12 +330,11 @@ func (gw *gateWay) UpdateServicesInfo(list []string) error { //nolint: cyclop
 	if _, err := servicesFile.Write([]byte("]}")); err != nil {
 		return errorsCore.WrapError(errorsCore.ErrCantWriteFile.Error(), err)
 	}
-	gw.registerNewHandlers()
 
 	return nil
 }
 
-func regService(srv models.Service, gw *gateWay, fn func(string, string) http.HandlerFunc) {
+func regService(srv models.Service, gw *GateWay, fn func(string, string) http.HandlerFunc) {
 	c := cors.New(cors.Options{
 		AllowedOrigins:   []string{"*"},
 		AllowCredentials: true,
@@ -369,19 +353,18 @@ func regService(srv models.Service, gw *gateWay, fn func(string, string) http.Ha
 	}
 }
 
-func CheckService(gw *gateWay, serv models.Service) error {
+func CheckService(gw *GateWay, serv models.Service) error {
 	var domain string
 	servicesNames := make([]string, 0, defaultServicesCnt)
 	domain = serv.IP
 
-	servicesList, err := getServices()
+	servicesList, err := gw.getServices()
 	if err != nil {
 		return errorsCore.WrapError("error while CheckService()", err)
 	}
 
 	// Gether current services names
-	services := config.ReadServicesList()
-	for _, s := range services.ServiceList {
+	for _, s := range gw.conf.Services {
 		servicesNames = append(servicesNames, s.Name)
 	}
 

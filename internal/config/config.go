@@ -15,8 +15,8 @@ const (
 	servicesList        = "services"
 )
 
-func GetConfig(isLocal bool) *models.Config {
-	instance := &models.Config{IsLocal: isLocal}
+func GetConfig() *models.Config {
+	instance := &models.Config{}
 	instance.Listen.IP = getEnv("GATEWAY_IP", "")
 	instance.Listen.Port = getEnv("GATEWAY_PORT", "")
 

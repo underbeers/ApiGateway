@@ -22,7 +22,7 @@ func (w *responseWriter) WriteHeader(statusCode int) {
 
 const logPermissions = 0o640
 
-func NewLogger(isLocal bool) *zap.Logger {
+func NewLogger() *zap.Logger {
 	loggerConfig := zap.NewProductionEncoderConfig()
 	loggerConfig.EncodeTime = zapcore.ISO8601TimeEncoder
 	defaultLogLevel := zapcore.DebugLevel
@@ -35,7 +35,7 @@ func NewLogger(isLocal bool) *zap.Logger {
 	return logger
 }
 
-func (gw *gateWay) logRequest(next http.Handler) http.Handler {
+func (gw *GateWay) logRequest(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		rw := &responseWriter{w, http.StatusOK}
 		gw.Logger.Info("started", zap.String("Method", r.Method), zap.String("URL", r.RequestURI),
@@ -64,7 +64,7 @@ func (gw *gateWay) logRequest(next http.Handler) http.Handler {
 	})
 }
 
-func (gw *gateWay) respond(w http.ResponseWriter, code int, data interface{}) {
+func (gw *GateWay) respond(w http.ResponseWriter, code int, data interface{}) {
 	w.WriteHeader(code)
 	if data != nil {
 		err := json.NewEncoder(w).Encode(data)
@@ -74,12 +74,12 @@ func (gw *gateWay) respond(w http.ResponseWriter, code int, data interface{}) {
 	}
 }
 
-func (gw *gateWay) warning(w http.ResponseWriter, code int, err error, msg string) {
+func (gw *GateWay) warning(w http.ResponseWriter, code int, err error, msg string) {
 	gw.respond(w, code, map[string]string{"message": msg})
 	gw.Logger.Warn(err.Error())
 }
 
-func (gw *gateWay) error(w http.ResponseWriter, code int, err error, ctx context.Context) { //nolint:unused
+func (gw *GateWay) error(w http.ResponseWriter, code int, err error, ctx context.Context) { //nolint:unused
 	gw.respond(w, code, map[string]string{"message": err.Error()})
 	gw.Logger.Error("", zap.Any(requestID, ctx.Value(requestID)), zap.String("err", err.Error()))
 }

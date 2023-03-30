@@ -14,3 +14,7 @@ type Service struct {
 type ServiceList struct {
 	ServiceList []Service `json:"serviceList"`
 }
+
+func (s *Service) JSONConv(remoteAddr string) {
+	s.IP = remoteAddr
+}
