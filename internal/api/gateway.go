@@ -74,6 +74,8 @@ func (gw *GateWay) registerNewHandlers() {
 	list := make(map[string]func(string, string) http.HandlerFunc)
 	list["user"] = gw.handleRedirectUserService
 	list["pet"] = gw.handleRedirectService
+	list["image"] = gw.handleRedirectService
+	list["advert"] = gw.handleRedirectService
 
 	for _, srv := range gw.conf.Services {
 		fn, ok := list[srv.Name]
