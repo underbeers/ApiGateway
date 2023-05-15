@@ -6,16 +6,19 @@ import (
 	"ApiGateway/internal/models"
 	"bytes"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"github.com/google/uuid"
 	"github.com/gorilla/mux"
 	"github.com/rs/cors"
 	"go.uber.org/zap"
 	"io"
+	"mime/multipart"
 	"net/http"
 	"net/http/httputil"
 	"net/url"
 	"os"
+	"path/filepath"
 	"strings"
 )
 
@@ -25,7 +28,7 @@ const (
 	requestID           = "X-request-ID"
 	RedirectURLHeader   = "RedirectURL"
 	infoEnd             = "endpoint-info/"
-	defaultServicesCnt  = 3 // How many microservice's we have when starting ApiGateway
+	defaultServicesCnt  = 5 // How many microservice's we have when starting ApiGateway
 	authorizationHeader = "authorization"
 	POST                = "POST"
 	GET                 = "GET"
@@ -74,7 +77,7 @@ func (gw *GateWay) registerNewHandlers() {
 	list := make(map[string]func(string, string) http.HandlerFunc)
 	list["user"] = gw.handleRedirectUserService
 	list["pet"] = gw.handleRedirectService
-	list["image"] = gw.handleRedirectService
+	list["image"] = gw.handleRedirectImageService
 	list["advert"] = gw.handleRedirectService
 
 	for _, srv := range gw.conf.Services {
@@ -164,6 +167,92 @@ func (gw *GateWay) handleRedirectService(ip string, port string) http.HandlerFun
 		proxy := httputil.NewSingleHostReverseProxy(redirectURL)
 		r.Header.Set(RedirectURLHeader, redirectURL.String())
 		proxy.ServeHTTP(w, r)
+	}
+}
+
+func (gw *GateWay) handleRedirectImageService(ip string, port string) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		redirectURL, err := buildURLHandler(ip, port)
+		if err != nil {
+			gw.Logger.Error("error handleRedirectService url parse", zap.Error(err))
+		}
+
+		client := new(http.Client)
+		client.CheckRedirect = func(req *http.Request, via []*http.Request) error {
+			return errors.New("redirect")
+		}
+
+		/*fileDir, _ := os.Getwd()
+		fileName := "some"
+		filePath := path.Join(fileDir, fileName)
+
+		file, _ := os.Open(filePath)
+		*/
+
+		r.ParseMultipartForm(32 << 20)
+		file, _, err := r.FormFile("file")
+		if err != nil {
+			panic(err)
+		}
+		defer file.Close()
+
+		temp := &bytes.Buffer{}
+		writer := multipart.NewWriter(temp)
+		part, _ := writer.CreateFormFile("file", filepath.Base("file"))
+		io.Copy(part, file)
+		writer.Close()
+
+		req, err := http.NewRequest("POST", redirectURL.String()+r.RequestURI, temp)
+		if err != nil {
+			gw.Logger.Fatal("req err")
+		}
+		req.Header.Add("Content-Type", writer.FormDataContentType())
+
+		response, err := client.Do(req)
+		if err != nil {
+			gw.Logger.Fatal("Redirect err")
+		}
+
+		body, err := io.ReadAll(response.Body)
+
+		type UserData struct {
+			Origin string `json:"origin"`
+		}
+
+		type PetData struct {
+			Origin    string `json:"origin"`
+			Thumbnail string `json:"thumbnail"`
+		}
+
+		type ResUser struct {
+			StatusCode int      `json:"statusCode"`
+			Message    string   `json:"message"`
+			UserData   UserData `json:"data"`
+		}
+
+		type ResPet struct {
+			StatusCode int     `json:"statusCode"`
+			Message    string  `json:"message"`
+			PetData    PetData `json:"Data"`
+		}
+
+		user := ResUser{}
+		pet := ResPet{}
+		if r.RequestURI == "/api/v1/fileUser" {
+			err := json.Unmarshal(body, &user)
+			if err != nil {
+				gw.Logger.Sugar().Errorf("failed to encode json %v", err)
+				return
+			}
+		}
+		if r.RequestURI == "/api/v1/filePet" {
+			err := json.Unmarshal(body, &pet)
+			if err != nil {
+				gw.Logger.Sugar().Errorf("failed to encode json %v", err)
+				return
+			}
+		}
+
 	}
 }
 

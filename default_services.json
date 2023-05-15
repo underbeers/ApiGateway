@@ -9,6 +9,16 @@
       "name": "pet",
       "label": "pl_pet_service",
       "endpoints": []
+    },
+    {
+      "name": "image",
+      "label": "pl_image_service",
+      "endpoints": []
+    },
+    {
+      "name": "advert",
+      "label": "pl_advert_service",
+      "endpoints": []
     }
   ]
 }
