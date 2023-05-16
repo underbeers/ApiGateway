@@ -241,9 +241,38 @@ func (gw *GateWay) handleRedirectImageService(ip string, port string) http.Handl
 		if r.RequestURI == "/api/v1/fileUser" {
 			err := json.Unmarshal(body, &user)
 			if err != nil {
+				gw.Logger.Sugar().Errorf("failed to unmarshal json %v", err)
+				return
+			}
+			var buf bytes.Buffer
+			err = json.NewEncoder(&buf).Encode(user)
+			if err != nil {
 				gw.Logger.Sugar().Errorf("failed to encode json %v", err)
 				return
 			}
+			redirectURL.Host = redirectURL.Host[:len(redirectURL.Host)-4] + "6001"
+			redString := redirectURL.String() + "/api/v1/user/image/set"
+			userReq, err := http.NewRequest("POST", redString, &buf)
+			if err != nil {
+				gw.Logger.Fatal("req err")
+			}
+			userReq.Header.Add("Content-Type", "application/json")
+			providedToken := strings.Split(r.Header.Get(authorizationHeader), " ")[1]
+			payload, err := parseToken(providedToken)
+			if err != nil {
+				gw.warning(w, http.StatusUnauthorized,
+					errorsCore.ErrInvalidToken, err.Error())
+
+				return
+			}
+			id := payload.ProfileID
+			userReq.Header.Set(userID, id.String())
+
+			tempRes, err := client.Do(userReq)
+			if err != nil {
+				gw.Logger.Fatal("Client.Do error")
+			}
+			println(tempRes)
 		}
 		if r.RequestURI == "/api/v1/filePet" {
 			err := json.Unmarshal(body, &pet)

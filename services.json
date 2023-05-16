@@ -1,1 +1,138 @@
-{"serviceList":[]}
+{"serviceList":[{
+	"name": "image",
+	"port": "6004",
+	"ip": "127.0.0.1",
+	"endpoints": [
+		{
+			"url": "filePet",
+			"protected": true,
+			"methods": [
+				"POST"
+			]
+		},
+		{
+			"url": "fileUser",
+			"protected": true,
+			"methods": [
+				"POST"
+			]
+		},
+		{
+			"url": "helloImage",
+			"protected": false,
+			"methods": [
+				"GET",
+				"HEAD"
+			]
+		}
+	]
+},{
+	"name": "user",
+	"port": "6001",
+	"ip": "127.0.0.1",
+	"endpoints": [
+		{
+			"url": "login/token",
+			"protected": true,
+			"methods": [
+				"GET",
+				"OPTIONS"
+			]
+		},
+		{
+			"url": "user/info",
+			"protected": true,
+			"methods": [
+				"GET",
+				"OPTIONS"
+			]
+		},
+		{
+			"url": "user/{userID}/chatID",
+			"protected": false,
+			"methods": [
+				"GET",
+				"OPTIONS"
+			]
+		},
+		{
+			"url": "registration/new",
+			"protected": false,
+			"methods": [
+				"POST",
+				"OPTIONS"
+			]
+		},
+		{
+			"url": "login",
+			"protected": false,
+			"methods": [
+				"POST",
+				"OPTIONS"
+			]
+		},
+		{
+			"url": "password/reset",
+			"protected": false,
+			"methods": [
+				"PATCH",
+				"OPTIONS"
+			]
+		},
+		{
+			"url": "helloMessage",
+			"protected": false,
+			"methods": [
+				"GET"
+			]
+		},
+		{
+			"url": "email/code",
+			"protected": false,
+			"methods": [
+				"POST",
+				"OPTIONS"
+			]
+		},
+		{
+			"url": "password/refresh",
+			"protected": false,
+			"methods": [
+				"POST",
+				"OPTIONS"
+			]
+		},
+		{
+			"url": "user/delete",
+			"protected": true,
+			"methods": [
+				"DELETE",
+				"OPTIONS"
+			]
+		},
+		{
+			"url": "user/password/change",
+			"protected": true,
+			"methods": [
+				"PATCH",
+				"OPTIONS"
+			]
+		},
+		{
+			"url": "user/chat/update",
+			"protected": true,
+			"methods": [
+				"PATCH",
+				"OPTIONS"
+			]
+		},
+		{
+			"url": "user/image/set",
+			"protected": true,
+			"methods": [
+				"POST",
+				"OPTIONS"
+			]
+		}
+	]
+}]}
