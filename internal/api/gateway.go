@@ -250,7 +250,7 @@ func (gw *GateWay) handleRedirectImageService(ip string, port string) http.Handl
 				gw.Logger.Sugar().Errorf("failed to encode json %v", err)
 				return
 			}
-			redirectURL.Host = redirectURL.Host[:len(redirectURL.Host)-4] + "6001"
+			redirectURL.Host = redirectURL.Host[:len(redirectURL.Host)-4] + os.Getenv("USERSERVICE_PORT")
 			redString := redirectURL.String() + "/api/v1/user/image/set"
 			userReq, err := http.NewRequest("POST", redString, &buf)
 			if err != nil {
