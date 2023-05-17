@@ -251,7 +251,7 @@ func (gw *GateWay) handleRedirectImageService(ip string, port string) http.Handl
 				return
 			}
 			redirectURL.Host = redirectURL.Host[:len(redirectURL.Host)-4] + os.Getenv("USERSERVICE_PORT")
-			redString := redirectURL.String() + "/api/v1/user/image/set"
+			redString := "http://" + os.Getenv("USERSERVICE_IP") + os.Getenv("USERSERVICE_PORT") + "/api/v1/user/image/set"
 			fmt.Println(redirectURL.String())
 			userReq, err := http.NewRequest("POST", redString, &buf)
 			if err != nil {
