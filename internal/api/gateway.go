@@ -233,7 +233,8 @@ func (gw *GateWay) handleRedirectImageService(ip string, port string) http.Handl
 		type ResPet struct {
 			StatusCode int     `json:"statusCode"`
 			Message    string  `json:"message"`
-			PetData    PetData `json:"Data"`
+			PetData    PetData `json:"data"`
+			PetCardID  int     `json:"petCardID"`
 		}
 
 		user := ResUser{}
@@ -278,9 +279,39 @@ func (gw *GateWay) handleRedirectImageService(ip string, port string) http.Handl
 		if r.RequestURI == "/api/v1/filePet" {
 			err := json.Unmarshal(body, &pet)
 			if err != nil {
+				gw.Logger.Sugar().Errorf("failed to unmarshal json %v", err)
+				return
+			}
+			var buf bytes.Buffer
+			err = json.NewEncoder(&buf).Encode(pet)
+			if err != nil {
 				gw.Logger.Sugar().Errorf("failed to encode json %v", err)
 				return
 			}
+			redirectURL.Host = redirectURL.Host[:len(redirectURL.Host)-4] + "6003"
+			//redString := "http://" + os.Getenv("PETSERVICE_IP") + ":" + os.Getenv("PETSERVICE_PORT") + "/api/v1/petCards/image/set"
+			fmt.Println(redirectURL.String())
+			userReq, err := http.NewRequest("POST", redirectURL.String(), &buf)
+			if err != nil {
+				gw.Logger.Fatal("req err")
+			}
+			userReq.Header.Add("Content-Type", "application/json")
+			providedToken := strings.Split(r.Header.Get(authorizationHeader), " ")[1]
+			payload, err := parseToken(providedToken)
+			if err != nil {
+				gw.warning(w, http.StatusUnauthorized,
+					errorsCore.ErrInvalidToken, err.Error())
+
+				return
+			}
+			id := payload.ProfileID
+			userReq.Header.Set(userID, id.String())
+
+			tempRes, err := client.Do(userReq)
+			if err != nil {
+				gw.Logger.Fatal("Client.Do error")
+			}
+			println(tempRes)
 		}
 
 	}
