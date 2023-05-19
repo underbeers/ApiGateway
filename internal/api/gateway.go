@@ -19,6 +19,7 @@ import (
 	"net/url"
 	"os"
 	"path/filepath"
+	"strconv"
 	"strings"
 )
 
@@ -237,6 +238,7 @@ func (gw *GateWay) handleRedirectImageService(ip string, port string) http.Handl
 			PetCardID  int     `json:"petCardID"`
 		}
 
+		petID := r.Form.Get("petID")
 		user := ResUser{}
 		pet := ResPet{}
 		if r.RequestURI == "/api/v1/fileUser" {
@@ -282,6 +284,12 @@ func (gw *GateWay) handleRedirectImageService(ip string, port string) http.Handl
 				gw.Logger.Sugar().Errorf("failed to unmarshal json %v", err)
 				return
 			}
+			pet.PetCardID, err = strconv.Atoi(petID)
+			if err != nil {
+				gw.Logger.Sugar().Errorf("failed to convert string to int %v", err)
+				return
+			}
+
 			var buf bytes.Buffer
 			err = json.NewEncoder(&buf).Encode(pet)
 			if err != nil {
@@ -289,9 +297,9 @@ func (gw *GateWay) handleRedirectImageService(ip string, port string) http.Handl
 				return
 			}
 			redirectURL.Host = redirectURL.Host[:len(redirectURL.Host)-4] + "6003"
-			//redString := "http://" + os.Getenv("PETSERVICE_IP") + ":" + os.Getenv("PETSERVICE_PORT") + "/api/v1/petCards/image/set"
+			redString := "http://" + os.Getenv("PETSERVICE_IP") + ":" + os.Getenv("PETSERVICE_PORT") + "/api/v1/petCards/image/set"
 			fmt.Println(redirectURL.String())
-			userReq, err := http.NewRequest("POST", redirectURL.String(), &buf)
+			userReq, err := http.NewRequest("POST", redString, &buf)
 			if err != nil {
 				gw.Logger.Fatal("req err")
 			}
