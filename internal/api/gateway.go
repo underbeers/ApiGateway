@@ -193,7 +193,8 @@ func (gw *GateWay) handleRedirectImageService(ip string, port string) http.Handl
 		r.ParseMultipartForm(32 << 20)
 		file, _, err := r.FormFile("file")
 		if err != nil {
-			panic(err)
+			gw.Logger.Fatal("request isn't multipart form data")
+			return
 		}
 		defer file.Close()
 
@@ -255,7 +256,6 @@ func (gw *GateWay) handleRedirectImageService(ip string, port string) http.Handl
 			}
 			redirectURL.Host = redirectURL.Host[:len(redirectURL.Host)-4] + os.Getenv("USERSERVICE_PORT")
 			redString := "http://" + os.Getenv("USERSERVICE_IP") + ":" + os.Getenv("USERSERVICE_PORT") + "/api/v1/user/image/set"
-			fmt.Println(redirectURL.String())
 			userReq, err := http.NewRequest("POST", redString, &buf)
 			if err != nil {
 				gw.Logger.Fatal("req err")
@@ -298,7 +298,6 @@ func (gw *GateWay) handleRedirectImageService(ip string, port string) http.Handl
 			}
 			redirectURL.Host = redirectURL.Host[:len(redirectURL.Host)-4] + "6003"
 			redString := "http://" + os.Getenv("PETSERVICE_IP") + ":" + os.Getenv("PETSERVICE_PORT") + "/api/v1/petCards/image/set"
-			fmt.Println(redirectURL.String())
 			userReq, err := http.NewRequest("POST", redString, &buf)
 			if err != nil {
 				gw.Logger.Fatal("req err")
