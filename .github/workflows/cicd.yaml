@@ -45,9 +45,6 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: .
-          build-args: |
-            "REACT_APP_API_URL=petland-backend.underbeers.space"
-            "REACT_APP_CHAT_API_URL=petland-chat-backend.underbeers.space"
           file: ./Dockerfile
           push: true
           tags: ghcr.io/underbeers/pl_api_gateway:v1
