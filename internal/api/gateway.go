@@ -254,7 +254,7 @@ func (gw *GateWay) handleRedirectImageService(ip string, port string) http.Handl
 				gw.Logger.Sugar().Errorf("failed to encode json %v", err)
 				return
 			}
-			redirectURL.Host = redirectURL.Host[:len(redirectURL.Host)-4] + os.Getenv("USERSERVICE_PORT")
+			//redirectURL.Host = redirectURL.Host[:len(redirectURL.Host)-4] + "6001"
 			redString := "http://" + os.Getenv("USERSERVICE_IP") + ":" + os.Getenv("USERSERVICE_PORT") + "/api/v1/user/image/set"
 			userReq, err := http.NewRequest("POST", redString, &buf)
 			if err != nil {
@@ -296,7 +296,7 @@ func (gw *GateWay) handleRedirectImageService(ip string, port string) http.Handl
 				gw.Logger.Sugar().Errorf("failed to encode json %v", err)
 				return
 			}
-			redirectURL.Host = redirectURL.Host[:len(redirectURL.Host)-4] + "6003"
+			//redirectURL.Host = redirectURL.Host[:len(redirectURL.Host)-4] + "6003"
 			redString := "http://" + os.Getenv("PETSERVICE_IP") + ":" + os.Getenv("PETSERVICE_PORT") + "/api/v1/petCards/image/set"
 			userReq, err := http.NewRequest("POST", redString, &buf)
 			if err != nil {
