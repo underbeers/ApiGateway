@@ -190,10 +190,14 @@ func (gw *GateWay) handleRedirectImageService(ip string, port string) http.Handl
 		file, _ := os.Open(filePath)
 		*/
 
-		r.ParseMultipartForm(32 << 20)
+		err = r.ParseMultipartForm(32 << 20)
+		if err != nil {
+			gw.Logger.Sugar().Fatalf("error parse multipart form, err: %v", err)
+			return
+		}
 		file, _, err := r.FormFile("file")
 		if err != nil {
-			gw.Logger.Fatal("request isn't multipart form data")
+			gw.Logger.Sugar().Fatalf("request isn't multipart form data, err: %v", err)
 			return
 		}
 		defer file.Close()
