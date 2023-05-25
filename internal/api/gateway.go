@@ -237,11 +237,11 @@ func (gw *GateWay) handleRedirectImageService(ip string, port string) http.Handl
 		gw.Logger.Sugar().Infof("response form imageService, body: %v", body)
 
 		type UserData struct {
-			Origin string `json:"origin"`
+			Original string `json:"original"`
 		}
 
 		type PetData struct {
-			Origin    string `json:"origin"`
+			Original  string `json:"original"`
 			Thumbnail string `json:"thumbnail"`
 		}
 
@@ -273,7 +273,7 @@ func (gw *GateWay) handleRedirectImageService(ip string, port string) http.Handl
 				gw.Logger.Sugar().Errorf("failed to encode json %v", err)
 				return
 			}
-			gw.Logger.Sugar().Infof("info about user after imageService: %s", user.UserData.Origin)
+			//gw.Logger.Sugar().Infof("info about user after imageService: %s", user.UserData.Original)
 			//redirectURL.Host = redirectURL.Host[:len(redirectURL.Host)-4] + "6001"
 			redString := "http://" + os.Getenv("USERSERVICE_IP") + ":" + os.Getenv("USERSERVICE_PORT") + "/api/v1/user/image/set"
 			userReq, err := http.NewRequest("POST", redString, &buf)
