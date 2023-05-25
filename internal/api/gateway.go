@@ -221,8 +221,6 @@ func (gw *GateWay) handleRedirectImageService(ip string, port string) http.Handl
 			return
 		}
 
-		gw.Logger.Sugar().Infof("info about user before imageService: %v", temp)
-
 		req, err := http.NewRequest("POST", redirectURL.String()+r.RequestURI, temp)
 		if err != nil {
 			gw.Logger.Fatal("req err")
@@ -235,6 +233,8 @@ func (gw *GateWay) handleRedirectImageService(ip string, port string) http.Handl
 		}
 
 		body, err := io.ReadAll(response.Body)
+
+		gw.Logger.Sugar().Infof("response form imageService, body: %v", body)
 
 		type UserData struct {
 			Origin string `json:"origin"`
