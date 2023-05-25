@@ -200,13 +200,28 @@ func (gw *GateWay) handleRedirectImageService(ip string, port string) http.Handl
 			gw.Logger.Sugar().Fatalf("request isn't multipart form data, err: %v", err)
 			return
 		}
-		defer file.Close()
+		defer func(file multipart.File) {
+			err := file.Close()
+			if err != nil {
+				gw.Logger.Sugar().Fatalf("failed to close file, err: %v", err)
+			}
+		}(file)
+
+		//gw.Logger.Sugar().Infof("info about user before imageService: %v", file)
 
 		temp := &bytes.Buffer{}
 		writer := multipart.NewWriter(temp)
 		part, _ := writer.CreateFormFile("file", filepath.Base("file"))
-		io.Copy(part, file)
-		writer.Close()
+		_, err = io.Copy(part, file)
+		if err != nil {
+			gw.Logger.Sugar().Fatalf("failed to copy data from file, err: %v", err)
+			return
+		}
+		err = writer.Close()
+		if err != nil {
+			gw.Logger.Sugar().Fatalf("failed to close writer, err: %v", err)
+			return
+		}
 
 		req, err := http.NewRequest("POST", redirectURL.String()+r.RequestURI, temp)
 		if err != nil {
@@ -258,6 +273,7 @@ func (gw *GateWay) handleRedirectImageService(ip string, port string) http.Handl
 				gw.Logger.Sugar().Errorf("failed to encode json %v", err)
 				return
 			}
+			gw.Logger.Sugar().Infof("info about user after imageService: %s", user.UserData.Origin)
 			//redirectURL.Host = redirectURL.Host[:len(redirectURL.Host)-4] + "6001"
 			redString := "http://" + os.Getenv("USERSERVICE_IP") + ":" + os.Getenv("USERSERVICE_PORT") + "/api/v1/user/image/set"
 			userReq, err := http.NewRequest("POST", redString, &buf)
