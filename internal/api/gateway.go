@@ -207,8 +207,6 @@ func (gw *GateWay) handleRedirectImageService(ip string, port string) http.Handl
 			}
 		}(file)
 
-		//gw.Logger.Sugar().Infof("info about user before imageService: %v", file)
-
 		temp := &bytes.Buffer{}
 		writer := multipart.NewWriter(temp)
 		part, _ := writer.CreateFormFile("file", filepath.Base("file"))
@@ -222,6 +220,8 @@ func (gw *GateWay) handleRedirectImageService(ip string, port string) http.Handl
 			gw.Logger.Sugar().Fatalf("failed to close writer, err: %v", err)
 			return
 		}
+
+		gw.Logger.Sugar().Infof("info about user before imageService: %v", temp)
 
 		req, err := http.NewRequest("POST", redirectURL.String()+r.RequestURI, temp)
 		if err != nil {
