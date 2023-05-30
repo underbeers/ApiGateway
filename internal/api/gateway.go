@@ -246,9 +246,10 @@ func (gw *GateWay) handleRedirectImageService(ip string, port string) http.Handl
 		}
 
 		type ResUser struct {
-			StatusCode int      `json:"statusCode"`
-			Message    string   `json:"message"`
-			UserData   UserData `json:"data"`
+			StatusCode  int      `json:"statusCode"`
+			Message     string   `json:"message"`
+			UserData    UserData `json:"data"`
+			AccessToken string   `json:"AccessToken"`
 		}
 
 		type ResPet struct {
@@ -258,7 +259,6 @@ func (gw *GateWay) handleRedirectImageService(ip string, port string) http.Handl
 			PetCardID  int     `json:"petCardID"`
 		}
 
-		petID := r.Form.Get("petID")
 		user := ResUser{}
 		pet := ResPet{}
 		if r.RequestURI == "/api/v1/fileUser" {
@@ -267,30 +267,31 @@ func (gw *GateWay) handleRedirectImageService(ip string, port string) http.Handl
 				gw.Logger.Sugar().Errorf("failed to unmarshal json %v", err)
 				return
 			}
-			var buf bytes.Buffer
-			err = json.NewEncoder(&buf).Encode(user)
-			if err != nil {
-				gw.Logger.Sugar().Errorf("failed to encode json %v", err)
-				return
-			}
-			//gw.Logger.Sugar().Infof("info about user after imageService: %s", user.UserData.Original)
-			//redirectURL.Host = redirectURL.Host[:len(redirectURL.Host)-4] + "6001"
-			redString := "http://" + os.Getenv("USERSERVICE_IP") + ":" + os.Getenv("USERSERVICE_PORT") + "/api/v1/user/image/set"
-			userReq, err := http.NewRequest("POST", redString, &buf)
-			if err != nil {
-				gw.Logger.Fatal("req err")
-			}
-			userReq.Header.Add("Content-Type", "application/json")
-			providedToken := strings.Split(r.Header.Get(authorizationHeader), " ")[1]
-			payload, err := parseToken(providedToken)
+			token := r.Form.Get("accessToken")
+			payload, err := parseToken(token)
 			if err != nil {
 				gw.warning(w, http.StatusUnauthorized,
 					errorsCore.ErrInvalidToken, err.Error())
 
 				return
 			}
-			id := payload.ProfileID
-			userReq.Header.Set(userID, id.String())
+			user.AccessToken = payload.ProfileID.String()
+			var buf bytes.Buffer
+			err = json.NewEncoder(&buf).Encode(user)
+			if err != nil {
+				gw.Logger.Sugar().Errorf("failed to encode json %v", err)
+				return
+			}
+
+			//gw.Logger.Sugar().Infof("info about user after imageService: %s", user.UserData.Original)
+			//redirectURL.Host = redirectURL.Host[:len(redirectURL.Host)-4] + "6001"
+			redString := "http://" + os.Getenv("USERSERVICE_IP") + ":" + os.Getenv("USERSERVICE_PORT") + "/api/v1/user/image/set"
+			//userReq, err := http.NewRequest("POST", redirectURL.String()+"/api/v1/user/image/set", &buf)
+			userReq, err := http.NewRequest("POST", redString, &buf)
+			if err != nil {
+				gw.Logger.Fatal("req err")
+			}
+			userReq.Header.Add("Content-Type", "application/json")
 
 			tempRes, err := client.Do(userReq)
 			if err != nil {
@@ -304,6 +305,7 @@ func (gw *GateWay) handleRedirectImageService(ip string, port string) http.Handl
 				gw.Logger.Sugar().Errorf("failed to unmarshal json %v", err)
 				return
 			}
+			petID := r.Form.Get("petID")
 			pet.PetCardID, err = strconv.Atoi(petID)
 			if err != nil {
 				gw.Logger.Sugar().Errorf("failed to convert string to int %v", err)
@@ -319,21 +321,11 @@ func (gw *GateWay) handleRedirectImageService(ip string, port string) http.Handl
 			//redirectURL.Host = redirectURL.Host[:len(redirectURL.Host)-4] + "6003"
 			redString := "http://" + os.Getenv("PETSERVICE_IP") + ":" + os.Getenv("PETSERVICE_PORT") + "/api/v1/petCards/image/set"
 			userReq, err := http.NewRequest("POST", redString, &buf)
+			//userReq, err := http.NewRequest("POST", redirectURL.String()+"/api/v1/petCards/image/set", &buf)
 			if err != nil {
 				gw.Logger.Fatal("req err")
 			}
 			userReq.Header.Add("Content-Type", "application/json")
-			providedToken := strings.Split(r.Header.Get(authorizationHeader), " ")[1]
-			payload, err := parseToken(providedToken)
-			if err != nil {
-				gw.warning(w, http.StatusUnauthorized,
-					errorsCore.ErrInvalidToken, err.Error())
-
-				return
-			}
-			id := payload.ProfileID
-			userReq.Header.Set(userID, id.String())
-
 			tempRes, err := client.Do(userReq)
 			if err != nil {
 				gw.Logger.Fatal("Client.Do error")
